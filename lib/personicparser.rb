@@ -9,7 +9,7 @@ class PensonicParser
   end
 
   def self.parse_good(http)
-  	doc = Nokogiri::HTML(http.body_str)
+    doc = Nokogiri::HTML(http.body_str)
     good_name = doc.xpath('//h1[@class = "product_main_name"]').text
     img =  doc.xpath('//img[@id = "bigpic"]')[0]['src']
     good = Goods.new(good_name, img)

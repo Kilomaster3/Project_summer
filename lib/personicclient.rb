@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PensonicClient
   attr_reader :url_pattern
 
@@ -6,8 +8,7 @@ class PensonicClient
   end
 
   def set_url(url)
-    @url = url 
-
+    @url = url
   end
 
   def data
