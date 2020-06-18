@@ -7,45 +7,34 @@ require 'ostruct'
 require './logger'
 require './personicparser'
 require './goods'
+require './personicclient'
 
 # $url_pattern = %r{^(https?://)?([\da-z\.-]+)\.([a-z\.]{2,6})([/\w \.-]*)*/?$}
 
 class PensonicScraper
-  attr_reader :url_pattern
-
-  def initialize
+	def initialize
     @url_pattern = %r{^(https?://)?(www\.petsonic\.com)([/\w \.-]*)*/?$}
+    @petsonic_client = PensonicClient.new()
   end
 
-  def get_category_goods(url)
-    http = Curl.get(url)
-    links = PensonicParser.parse_category_goods(http)
-    Logger.log(links, 'get category goods... ')
-    links
+  def url_pattern
+  	@url_pattern 
   end
 
-  def get_good_info(url)
-    http = Curl.get(url)
-    doc = Nokogiri::HTML(http.body_str)
-    good_name = doc.xpath('//h1[@class = "product_main_name"]').text
-    img =  doc.xpath('//img[@id = "bigpic"]')[0]['src']
-    good = Goods.new(good_name, img)
-    doc.xpath('//ul[@class = "attribute_radio_list"]/li').each do |row|
-      temp1 = Nokogiri::HTML(row.inner_html)
-      weight_price = temp1.xpath('//span[@class = "price_comb"]', '//span[@class = "radio_label"]')
-      good.add_weight_price([weight_price[0].text, weight_price[1].text])
-    end
-    p good
-  end
+  def set_url(url)
+  	@petsonic_client.set_url(url)
+ end
 
-  def scrape_goods_info(links)
-    links.each { |link| get_good_info(link) }
-  end
+ def run
+	data = @petsonic_client.data
+	p data
+ end
+end
 
-  def parse(url)
-    links = get_category_goods(url)
-    scrape_goods_info(links)
-  end
+class CSVFileWritter
+	def Normalize
+		normalaizer = 
+	end
 end
 
 class Program
@@ -64,8 +53,9 @@ class Program
     puts @file_path
   end
 
-  def parse
-    @site_parser.parse(@url)
+  def data
+    @site_parser.set_url(@url)
+    @site_parser.run
   end
 
   private
@@ -81,4 +71,4 @@ end
 
 parser = Program.new(PensonicScraper.new)
 parser.set_arg(ARGV)
-parser.parse
+parser.data
