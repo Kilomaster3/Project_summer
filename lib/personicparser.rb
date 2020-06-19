@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# This class represents parser for goods and category from www.//www.petsonic.com
 class PensonicParser
   def self.parse_category_goods(http)
     doc = Nokogiri::HTML(http.body_str)

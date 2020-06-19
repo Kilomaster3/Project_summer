@@ -15,20 +15,13 @@ require './lib/pensonicscraper'
 class Program
   def initialize(scraper)
     @scraper = scraper
-    @url = ''
-    @file_name = ''
-    @file_name_path = /^\w+$/
+    @file_name_pattern = /^\w+$/
   end
 
-  def setArg(arg_v)
+  def run(arg_v)
     check_args(arg_v)
-    @url = arg_v[0]
-    @file_name = arg_v[1]
-  end
-
-  def run
-    @scraper.set_url(@url)
-    @scraper.setFileName(@file_name)
+    @scraper.url(arg_v[0])
+    @scraper.file_name = arg_v[1]
     @scraper.run
   end
 
@@ -37,11 +30,11 @@ class Program
   def check_args(arg_v)
     raise 'You have to pass 2 args' if arg_v.length > 2
     raise 'arg_v[0] should be url' unless @scraper.url_pattern.match(arg_v[0])
-    unless @file_name_path.match(arg_v[1].to_s)
+    unless @file_name_pattern.match(arg_v[1].to_s)
       raise 'arg_v[1] should be file name, you can use letters, diggits or underscore'
     end
   end
 end
-parser = Program.new(PensonicScraper.new)
-parser.setArg(ARGV)
-parser.run
+
+parser = Program.new(PensonicScraper.new(CSVFileWritter.new))
+parser.run(ARGV)

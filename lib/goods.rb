@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# This class represents goods from category.
 class Goods
   attr_reader :product_main_name
   attr_reader :img

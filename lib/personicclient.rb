@@ -1,39 +1,42 @@
 # frozen_string_literal: true
 
+# This class represent client for www.//www.petsonic.com.
 class PensonicClient
   attr_reader :url_pattern
-
-  def initialize
-    @url = ''
-  end
-
-  def set_url(url)
-    @url = url
-  end
+  attr_accessor :url
 
   def data
-    links = get_category_goods
+    links = category_goods
     scrape_goods_info(links)
   end
 
   private
 
-  def get_category_goods
+  def category_goods
     http = Curl.get(@url)
     links = PensonicParser.parse_category_goods(http)
     Logger.log(links, 'get category goods... ')
     links
   end
 
-  def get_good_info(url)
-    http = Curl.get(url)
-    good = PensonicParser.parse_good(http)
-    good
+  def goods_info(urls)
+    responses = {}
+    m = Curl::Multi.new
+    urls.each do |url|
+      responses[url] = Curl::Easy.new(url)
+      m.add(responses[url])
+    end
+    m.perform
+    Logger.log_request_time(urls, responses)
+    responses
   end
 
-  def scrape_goods_info(links)
+  def scrape_goods_info(urls)
     goods_info = []
-    links.each { |link| goods_info.push(get_good_info(link)) }
+    responses = goods_info(urls)
+    urls.each do |url|
+      goods_info.push(PensonicParser.parse_good(responses[url]))
+    end
     goods_info
   end
 end

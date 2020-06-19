@@ -1,18 +1,19 @@
 # frozen_string_literal: true
 
+# This class represents writter to csv file.
 class CSVFileWritter
   def initialize
     @data = []
     @file_name = ''
   end
 
-  def setData(data, file_name)
+  def set_data(data, file_name)
     @data = data
     @file_name = file_name
   end
 
   def write
-    goods = prepareData
+    goods = prepare_data
     CSV.open('./' + @file_name + '.csv', 'w') do |csv|
       goods.each { |item| csv << item }
     end
@@ -22,17 +23,17 @@ class CSVFileWritter
 
   private
 
-  def prepareData
+  def prepare_data
     result = []
     @data.each { |item| normalize(item).each { |value| result.push(value) } }
     result
   end
 
-  def normalizeSingle(item)
+  def normalize_single(item)
     [[item.product_main_name, item.weight_price[0][0], item.img]]
   end
 
-  def normalizeMult(item)
+  def normalize_mult(item)
     name = item.product_main_name
     img = item.img
     result = []
@@ -41,8 +42,8 @@ class CSVFileWritter
   end
 
   def normalize(item)
-    return normalizeMult(item) if item.weight_price.length > 1
+    return normalize_mult(item) if item.weight_price.length > 1
 
-    normalizeSingle(item)
+    normalize_single(item)
   end
 end
