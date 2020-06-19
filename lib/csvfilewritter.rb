@@ -2,11 +2,6 @@
 
 # This class represents writter to csv file.
 class CSVFileWritter
-  def initialize
-    @data = []
-    @file_name = ''
-  end
-
   def set_data(data, file_name)
     @data = data
     @file_name = file_name
