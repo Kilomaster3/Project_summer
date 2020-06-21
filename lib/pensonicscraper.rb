@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
+require_relative './scraper'
+
 # This class represent scraper for www.//www.petsonic.com.
 class PensonicScraper
+  include Scraper
   attr_accessor :file_name
   attr_reader :url_pattern
 

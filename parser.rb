@@ -1,18 +1,19 @@
 # frozen_string_literal: true
-# Programm
+
+# Main file of app
 require 'nokogiri'
 require 'open-uri'
 require 'curb'
 require 'ostruct'
 require 'csv'
-require './lib/logger'
-require './lib/personicparser'
-require './lib/goods'
-require './lib/personicclient'
-require './lib/csvfilewritter'
-require './lib/pensonicscraper'
+require_relative './lib/logger'
+require_relative './lib/personicparser'
+require_relative './lib/goods'
+require_relative './lib/personicclient'
+require_relative './lib/csvfilewritter'
+require_relative './lib/pensonicscraper'
 
-class Program
+class Parser
   def initialize(scraper)
     @scraper = scraper
     @file_name_pattern = /^\w+$/
@@ -36,5 +37,5 @@ class Program
   end
 end
 
-parser = Program.new(PensonicScraper.new(CSVFileWritter.new))
+parser = Parser.new(PensonicScraper.new(CSVFileWritter.new))
 parser.run(ARGV)

@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require_relative './filewritter'
 # This class represents writter to csv file.
 class CSVFileWritter
+  include FileWritter
   def set_data(data, file_name)
     @data = data
     @file_name = file_name
@@ -25,19 +27,19 @@ class CSVFileWritter
   end
 
   def normalize_single(item)
-    [[item.product_main_name, item.weight_price[0][0], item.img]]
+    [[item.product_main_name, item.measures_prices[0]['price'], item.img]]
   end
 
   def normalize_mult(item)
     name = item.product_main_name
     img = item.img
     result = []
-    item.weight_price.each { |i| result.push([name + ' ' + i[1], i[0], img]) }
+    item.measures_prices.each { |i| result.push([name + ' ' + i['measure'], i['price'], img]) }
     result
   end
 
   def normalize(item)
-    return normalize_mult(item) if item.weight_price.length > 1
+    return normalize_mult(item) if item.measures_prices.length > 1
 
     normalize_single(item)
   end

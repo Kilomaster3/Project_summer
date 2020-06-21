@@ -4,15 +4,15 @@
 class Goods
   attr_reader :product_main_name
   attr_reader :img
-  attr_reader :weight_price
+  attr_reader :measures_prices
 
   def initialize(product_main_name, img)
     @product_main_name = product_main_name
     @img = img
-    @weight_price = []
+    @measures_prices = []
   end
 
-  def add_weight_price(weight_price)
-    @weight_price.push(weight_price)
+  def add_measure_price(measure_price)
+    @measures_prices.push(measure_price)
   end
 end
