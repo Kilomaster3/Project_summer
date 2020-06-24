@@ -21,7 +21,7 @@ class PensonicParser
     doc.xpath('//a[@class = "product_img_link pro_img_hover_scale product-list-category-img"]')
        .each { |row| links.push(row['href']) }
     links
-end
+  end
 
   def self.parse_good(http)
     doc = Nokogiri::HTML(http.body_str)
@@ -36,12 +36,9 @@ end
     good
   end
 
-  private 
-
   def self.remove_symbol(cur)
     pattern = /(\d+\.?\d*)(.+)/
     temp = pattern.match(cur)
     temp[1]
   end
-
 end

@@ -28,6 +28,7 @@ class PensonicClient
       http = Curl.get(url)
       temp = PensonicParser.parse_category_with_sub(http)
       break if temp.empty?
+
       temp.each do |item|
         links.push(item)
       end
@@ -51,17 +52,15 @@ class PensonicClient
 
   def add_result(goods_info, urls, responses)
     error_links = []
-     urls.each do |url|
-      begin
-        goods_info.push(PensonicParser.parse_good(responses[url]))
-      rescue 
-        p 'scarping error'
-        p url
-        error_links.push(url) 
-     end
-   end
-   error_links
- end
+    urls.each do |url|
+      goods_info.push(PensonicParser.parse_good(responses[url]))
+    rescue StandardError
+      p 'scarping error'
+      p url
+      error_links.push(url)
+    end
+    error_links
+  end
 
   def scrape_goods_info(urls)
     goods_info = []
@@ -70,8 +69,8 @@ class PensonicClient
     if (goods_info.length - error_urls.length) != goods_info.length
       p 'retry'
       responses1 = goods_info(error_urls)
-      error_urls1 =  add_result(goods_info, error_urls, responses1)
-      if error_urls1.length != 0 
+      error_urls1 = add_result(goods_info, error_urls, responses1)
+      unless error_urls1.empty?
         p 'urls not add '
         error_urls.each do |url|
           p url

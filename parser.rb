@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# Main file of app
 require 'nokogiri'
 require 'open-uri'
 require 'curb'
@@ -13,6 +12,7 @@ require_relative './lib/personicclient'
 require_relative './lib/csvfilewritter'
 require_relative './lib/pensonicscraper'
 
+# Main file of app
 class Parser
   def initialize(scraper)
     @scraper = scraper
