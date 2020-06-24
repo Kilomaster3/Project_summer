@@ -27,6 +27,9 @@ class CSVFileWritter
   end
 
   def normalize_single(item)
+    if item.measures_prices[0].nil?
+      return [[item.product_main_name,'non', item.img]]
+    end
     [[item.product_main_name, item.measures_prices[0]['price'], item.img]]
   end
 

@@ -7,6 +7,7 @@ class PensonicClient
 
   def data
     links = category_goods
+    p links.length
     scrape_goods_info(links)
   end
 
@@ -14,8 +15,25 @@ class PensonicClient
 
   def category_goods
     http = Curl.get(@url)
-    links = PensonicParser.parse_category_goods(http)
-    Logger.log(links, 'get category goods... ')
+    if PensonicParser.category_with_sub?(http)
+      links = PensonicParser.parse_single_category(http)
+      Logger.log(links, 'get single category goods... ')
+      return links
+    end
+    temp = []
+    links = PensonicParser.parse_category_with_sub(http)
+    i = 2
+    loop  do
+      url = @url + "?p=#{i}"
+      http = Curl.get(url)
+      temp = PensonicParser.parse_category_with_sub(http)
+      break if temp.empty?
+      temp.each do |item|
+        links.push(item)
+      end
+      i += 1
+    end
+    Logger.log(links, 'get multi category goods... ')
     links
   end
 
@@ -35,8 +53,12 @@ class PensonicClient
     goods_info = []
     responses = goods_info(urls)
     urls.each do |url|
-      goods_info.push(PensonicParser.parse_good(responses[url]))
+      begin
+        goods_info.push(PensonicParser.parse_good(responses[url]))
+      rescue 
+     end
     end
+    p goods_info.length
     goods_info
   end
 end
