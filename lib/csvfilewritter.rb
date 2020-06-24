@@ -26,24 +26,11 @@ class CSVFileWritter
     result
   end
 
-  def normalize_single(item)
-    if item.measures_prices[0].nil?
-      return [[item.product_main_name,'non', item.img]]
-    end
-    [[item.product_main_name, item.measures_prices[0]['price'], item.img]]
-  end
-
-  def normalize_mult(item)
+  def normalize(item)
     name = item.product_main_name
     img = item.img
     result = []
     item.measures_prices.each { |i| result.push([name + ' ' + i['measure'], i['price'], img]) }
     result
-  end
-
-  def normalize(item)
-    return normalize_mult(item) if item.measures_prices.length > 1
-
-    normalize_single(item)
   end
 end

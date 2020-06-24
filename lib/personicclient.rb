@@ -7,7 +7,7 @@ class PensonicClient
 
   def data
     links = category_goods
-    p links.length
+    p 'we are going to work with ' + links.length.to_s + ' goods'
     scrape_goods_info(links)
   end
 
@@ -49,16 +49,36 @@ class PensonicClient
     responses
   end
 
-  def scrape_goods_info(urls)
-    goods_info = []
-    responses = goods_info(urls)
-    urls.each do |url|
+  def add_result(goods_info, urls, responses)
+    error_links = []
+     urls.each do |url|
       begin
         goods_info.push(PensonicParser.parse_good(responses[url]))
       rescue 
+        p 'scarping error'
+        p url
+        error_links.push(url) 
      end
+   end
+   error_links
+ end
+
+  def scrape_goods_info(urls)
+    goods_info = []
+    responses = goods_info(urls)
+    error_urls = add_result(goods_info, urls, responses)
+    if (goods_info.length - error_urls.length) != goods_info.length
+      p 'retry'
+      responses1 = goods_info(error_urls)
+      error_urls1 =  add_result(goods_info, error_urls, responses1)
+      if error_urls1.length != 0 
+        p 'urls not add '
+        error_urls.each do |url|
+          p url
+        end
+      end
     end
-    p goods_info.length
+    p goods_info.length.to_s + ' is done'
     goods_info
   end
 end
